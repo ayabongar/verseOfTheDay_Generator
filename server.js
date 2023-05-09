@@ -2,36 +2,61 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-http.createServer(function (req, res) {
-    //Creating the file path for the specific html file we want to render
-    const filePath = path.join(__dirname, 'pages', req.url);
+const rootDirectory = path.join(__dirname, 'app');
 
-    //Check if that page exists
-    fs.exists(filePath, function(exists) {
-        if(!exists) {
-            res.writeHead(404, {'Content-Type' : 'text/html'});
-            res.end('404 Not Found');
-            return;
+const server = http.createServer((request, response) => {
+    if (request.url.startsWith('/api/')) {
+        if (request.method === 'GET') {
+            if (request.url === '/api/users') {
+                const users = [
+                    { id: 1, username: 'testUser', password: 'password1', hasVoted: false }
+                ]
+
+                response.writeHead(200, { 'Content-Type': 'application/json' });
+                response.write(JSON.stringify(users));
+                response.end();
+            } else {
+                response.writeHead(404);
+                response.write('API Endpoint not found');
+                response.end();
+            }
+        } else {
+            response.writeHead(405);
+            response.write('Method not allowed');
+            response.end();
         }
+    } else {
+        const filePath = path.join(__dirname, 'app/pages', request.url);
 
-        fs.readFile(filePath, function(err, data) {
-            if(err) {
-                res.writeHead(500, {'Content-Type' : 'text/html'});
-                res.end('500 Internal Server Error');
+        fs.exists(filePath, function (exists) {
+            if (!exists) {
+                response.writeHead(404, { 'Content-Type': 'text/html' });
+                response.end('404 Not Found');
                 return;
             }
 
-            let contentType = 'text/html';
-            if(req.url.endsWith('.css')) {
-                contentType = 'text/css';
-            } else if(req.url.endsWith('.js')) {
-                contentType = 'text/javascript';
-            }
+            fs.readFile(filePath, function (err, data) {
+                if (err) {
+                    response.writeHead(500, { 'Content-Type': 'text/html' });
+                    response.end('500 Internal Server Error');
+                    return;
+                }
 
-            res.writeHead(200, {'Content-Type' : contentType});
-            res.write(data);
-            res.end();
+                let contentType = 'text/html';
+                if (request.url.endsWith('.css')) {
+                    contentType = 'text/css';
+                } else if (request.url.endsWith('.js')) {
+                    contentType = 'text/javascript';
+                }
+
+                response.writeHead(200, { 'Content-Type': contentType });
+                response.write(data);
+                response.end();
+            });
         });
-    });
+    }
+});
 
-}).listen(8080);
+server.listen(8080, () => {
+    console.log('Server is listening on port 8080');
+});
