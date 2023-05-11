@@ -31,17 +31,17 @@ const server = http.createServer((request, response) => {
 
     if(mimeType == 'text/jpeg')
     {
-        file = __dirname + `/images/`+path;
+        file = __dirname + `/app/pages/images/`+path;
     }
     else
     {
-        if(fs.existsSync(__dirname + `/${folderName}/`+path))
+        if(fs.existsSync(__dirname + `/app/pages/${folderName}/`+path))
         {
-            file = __dirname + `/${folderName}/`+path;
+            file = __dirname + `/app/pages/${folderName}/`+path;
             console.log('Fetching Resources - ' + file);
         }else
         {
-            file = __dirname + `/error/error.html`;
+            file = __dirname + `/app/pages/error/error.html`;
         }
     }
     
