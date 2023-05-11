@@ -19,30 +19,21 @@ const server = http.createServer((request, response) => {
     //strip leading and trailing slashes
     let path = _URL.path.replace(/^\/+|\/+$/g,"");
 
-    if(path == '' || path == '/login'){
+    if(path == '' || path == 'login'){
         path = 'login.html';
     }
-
     //Resolve Folder and MIME Type
     folderName = handleFolderName(path);
-    console.log(folderName);
     mimeType = mimeTypesLookup(path);
-    console.log(mimeType);
 
-    if(mimeType == 'text/jpeg')
+    if(fs.existsSync(__dirname + `/app/pages/${folderName}/`+path))
     {
-        file = __dirname + `/app/pages/images/`+path;
-    }
-    else
+        file = __dirname + `/app/pages/${folderName}/`+path;
+        console.log('Fetching Resources - ' + file);
+    }else
     {
-        if(fs.existsSync(__dirname + `/app/pages/${folderName}/`+path))
-        {
-            file = __dirname + `/app/pages/${folderName}/`+path;
-            console.log('Fetching Resources - ' + file);
-        }else
-        {
-            file = __dirname + `/app/pages/error/error.html`;
-        }
+        console.log('Path Does Not Exist - ' + __dirname + `/app/pages/${folderName}/`+path);
+        file = __dirname + `/app/pages/error/error.html`;
     }
     
     fs.readFile(file, function(err, content){
@@ -58,7 +49,6 @@ const server = http.createServer((request, response) => {
     })
     
 });
-
 
 function handleFolderName(path){
     if(path.includes('.html'))
