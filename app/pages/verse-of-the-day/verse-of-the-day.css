@@ -1,3 +1,96 @@
-h1 {
-    color: darkblue;
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&display=swap');
+
+:root{
+    --background_colour: rgb(242, 237, 231);
+    --share_colour: rgb(139,145,131);
+    --share_outline: rgb(94, 98, 89);
+}
+
+*{
+    padding: 0%;
+    margin: 0;
+}
+body{
+    background-color: var(--background_colour);
+    width: 100vw;
+    height: 100vh;
+}
+main{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-image: url("./Images/TopLeft.png"),url("./Images/TopRight.png"), url("./Images/BottomLeft.png"), url("./Images/BottomRight.png");
+    background-position:left top, right top, left bottom, right bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.verse{
+    height: 40%;
+    width: 50%;
+    margin: 0 0 10rem 10vw;
+    font-family: 'Raleway', sans-serif;
+}
+.verse h1{
+    font-weight: 600;
+    font-size: 4rem;
+}
+.verse blockquote{
+    font-size: 1.5rem;
+    font-weight: 300; 
+}
+.verse button{
+    margin-top: 1rem;
+    background: transparent;
+    border: none;
+}
+.verse i{
+    display: block;
+    width: 3rem;
+    height: 3rem;
+}
+.material-symbols-rounded {
+    font-size: 48px;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 200,
+  'opsz' 48;
+}
+.like .material-symbols-rounded:hover{
+    -webkit-text-stroke: 3px maroon;
+    color: red;
+    font-variation-settings:
+    'FILL' 100;
+}
+.share .material-symbols-rounded:hover{
+    -webkit-text-stroke: 3px var(--share_outline);
+    color: var(--share_colour);
+    font-variation-settings:
+    'FILL' 100;
+}
+.shadow{
+    text-shadow: 
+        -1px -1px 0 var(--background_colour),
+        0   -1px 0 var(--background_colour),
+        1px -1px 0 var(--background_colour),
+        1px  0   0 var(--background_colour),
+        1px  1px 0 var(--background_colour),
+        0    1px 0 var(--background_colour),
+        -1px  1px 0 var(--background_colour),
+        -1px  0   0 var(--background_colour);
+}
+@media (max-aspect-ratio:1/1) or (max-width: 815px) {
+    .verse{
+        margin: 0 0 10rem 0vw;
+    }
+    .verse h1{
+        font-size: 3rem;
+    }
+    .verse blockquote{
+        font-size: 1.3rem;
+        font-weight: 300; 
+    }
 }
