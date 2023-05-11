@@ -1,1 +1,0 @@
-console.log("Verse of the day works");
