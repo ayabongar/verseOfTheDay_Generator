@@ -2,8 +2,11 @@
 
 :root{
     --background_colour: rgb(242, 237, 231);
+    --background_colour_op: rgba(242, 237, 231, .5);
+    --backgroung_color_inv: rgba(242, 237, 231, 0);
     --share_colour: rgb(139,145,131);
     --share_outline: rgb(94, 98, 89);
+    --text_color: rgb(70,62,67);
 }
 
 *{
@@ -19,18 +22,49 @@ main{
     height: 100%;
     width: 100%;
     position: fixed;
-    background-image: url("./Images/TopLeft.png"),url("./Images/TopRight.png"), url("./Images/BottomLeft.png"), url("./Images/BottomRight.png");
-    background-position:left top, right top, left bottom, right bottom;
-    background-repeat: no-repeat;
-    background-size: contain;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    background-image: url("./verse-of-the-day/Images/TopLeft.png"),url("./verse-of-the-day/Images/TopRight.png"), url("./verse-of-the-day/Images/BottomLeft.png"), url("./verse-of-the-day/Images/BottomRight.png");
+    background-position:left top, right top, left bottom, right bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
+    
+    color: var(--text_color);
+}
+nav{
+    width: fit-content;
+    display: flex;
+    margin: 2rem 2rem auto auto;
+    font-size: 1.5em;
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    border-bottom: 3px var(--background_colour_op) solid;
+    padding-bottom: .5rem;
+
+    animation: jump-shaking .9s 2;
+    animation-delay: 1s;
+}
+nav menu ol{
+    list-style: none;
+    background-color: var(--background_colour_op);
+    padding: 5px;
+    border-radius: 5px;
+}
+nav menu ol a{
+    text-decoration: none;
+    color: var(--text_color);
 }
 .verse{
+    display: block;
     height: 40%;
     width: 50%;
-    margin: 0 0 10rem 10vw;
+    margin: 0 0 10rem 20vw;
     font-family: 'Raleway', sans-serif;
 }
 .verse h1{
@@ -95,7 +129,8 @@ main{
 }
 @media (max-aspect-ratio:1/1) or (max-width: 815px) {
     .verse{
-        margin: 0 0 10rem 0vw;
+        margin: 0 auto 10rem auto;
+        width: 80%;
     }
     .verse h1{
         font-size: 3rem;
@@ -105,3 +140,13 @@ main{
         font-weight: 300; 
     }
 }
+
+@keyframes jump-shaking {
+    0% { transform: translateX(0) }
+    25% { transform: translateY(-9px) }
+    35% { transform: translateY(-9px) rotate(2deg) }
+    55% { transform: translateY(-9px) rotate(-2deg) }
+    65% { transform: translateY(-9px) rotate(2deg) }
+    75% { transform: translateY(-9px) rotate(-2deg) }
+    100% { transform: translateY(0) rotate(0) }
+  }

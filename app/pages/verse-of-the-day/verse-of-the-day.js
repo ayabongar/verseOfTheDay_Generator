@@ -29,16 +29,19 @@ shareButton.addEventListener("click", (e)=>{
     let body = verseContainer.getElementsByTagName('blockquote')[0];
 
     let text = `${introText}${title.textContent}\n${body.textContent}`;
+    if(navigator.share){
+        navigator.share({
+                title:title.textContent,
+                text:body.textContent,
+                url:window.location
+            });
+        return;
+    }
     navigator.clipboard.writeText(text);
-    navigator.share({
-        title:title,
-        text:body
-    })
-
-    // popup(e, "Copied to clipboard!", 2);
+    popup(e, "Copied to clipboard!");
 })
 
-function popup(e,text, duration){
+function popup(e,text){
     //Get position of cursor
     let y = e.clientY-8;
     let x = e.clientX+30;
