@@ -65,11 +65,22 @@ main{
     font-variation-settings:
     'FILL' 100;
 }
+.like.click > i{
+    -webkit-text-stroke: 3px maroon;
+    color: red;
+    font-variation-settings:
+    'FILL' 100;
+}
 .share .material-symbols-rounded:hover{
     -webkit-text-stroke: 3px var(--share_outline);
     color: var(--share_colour);
     font-variation-settings:
     'FILL' 100;
+}
+.popup{
+    display: block;
+    border: none;
+    background-color: transparent;
 }
 .shadow{
     text-shadow: 
