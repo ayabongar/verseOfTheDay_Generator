@@ -5,11 +5,16 @@ let likeButton = document.getElementsByClassName("like")[0];
 let likeClicked = false;
 let shareButton = document.getElementsByClassName("share")[0];
 
-const shareData = {
-    title: "MDN",
-    text: "Learn web development on MDN!",
-    url: "https://developer.mozilla.org",
-  };
+function populateVerse(){
+    //make api call
+    let title = "John 3:16";
+    let content = "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not "+
+    "perish but have eternal life.";
+    let verse = document.getElementsByClassName("verse")[0];
+    verse.getElementsByTagName("h1")[0].textContent = title;
+    verse.getElementsByTagName("blockquote")[0].textContent = content;
+}
+window.onload = populateVerse;
 
 likeButton.addEventListener("click",()=>{
     if(!likeClicked){
