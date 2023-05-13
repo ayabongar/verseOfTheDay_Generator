@@ -14,6 +14,7 @@ function populateVerse(){
     verse.getElementsByTagName("h1")[0].textContent = title;
     verse.getElementsByTagName("blockquote")[0].textContent = content;
 }
+
 window.onload = populateVerse;
 
 likeButton.addEventListener("click",()=>{

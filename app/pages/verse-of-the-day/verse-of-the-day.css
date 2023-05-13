@@ -95,15 +95,14 @@ nav menu ol a{
 }
 .like .material-symbols-rounded:hover{
     -webkit-text-stroke: 3px maroon;
-    color: red;
-    font-variation-settings:
-    'FILL' 100;
 }
 .like.click > i{
     -webkit-text-stroke: 3px maroon;
     color: red;
     font-variation-settings:
     'FILL' 100;
+
+    animation: pop .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 .share .material-symbols-rounded:hover{
     -webkit-text-stroke: 3px var(--share_outline);
@@ -150,3 +149,21 @@ nav menu ol a{
     75% { transform: translateY(-9px) rotate(-2deg) }
     100% { transform: translateY(0) rotate(0) }
   }
+
+@keyframes pop{
+    0%{
+        transform: scale(1);
+    }
+    25%{
+        transform: translateY(-10px) rotateY(90deg);
+    }
+    50%{
+        transform: scale(1.2) translateY(-10px) rotateY(180deg);
+    }
+    75%{
+        transform: translateY(-10px) rotateY(270deg);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
