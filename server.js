@@ -25,6 +25,27 @@ const server = http.createServer((request, response) => {
             response.write('Method not allowed');
             response.end();
         }
+    } else if(request.url.endsWith('.txt')) {
+        const filePath = path.join(__dirname, request.url);
+        fs.exists(filePath, function (exists) {
+            if (!exists) {
+                response.writeHead(404, { 'Content-Type': 'text/plain' });
+                response.end('404 Not Found');
+                return;
+            }
+
+            fs.readFile(filePath, function (err, data) {
+                if (err) {
+                    response.writeHead(500, { 'Content-Type': 'text/plain' });
+                    response.end('500 Internal Server Error');
+                    return;
+                }
+
+                response.writeHead(200, { 'Content-Type': 'text/plain' });
+                response.write(data);
+                response.end();
+            });
+        });
     } else {
         const filePath = path.join(__dirname, 'app/pages', request.url);
 
