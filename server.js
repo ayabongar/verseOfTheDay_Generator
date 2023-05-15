@@ -39,9 +39,9 @@ const server = http.createServer((request, response) => {
     fs.readFile(file, function(err, content){
         if(err){
             console.log(err);
-            response.writeHead(404);
-            response.end();
-        }else{
+                response.writeHead(404);
+                response.end();
+        } else {
             console.log(`Returning Path ${path}`);
             response.writeHead(200, {'Content-type':mimeType});
             response.end(content);
@@ -54,20 +54,19 @@ function handleFolderName(path){
     if(path.includes('.html'))
     {
         return path.replace('.html','');
-    }
+            }
     else if(path.includes('.css'))
     {
        return path.replace('.css','');
-    }
+                }
     else if(path.includes('.js'))
     {
        return path.replace('.js','');
-    }
+                }
 
     return '';
-}
+    }
 
 server.listen(8080, 'localhost', () => {
     console.log('Server is listening on port 8080');
 });
-
