@@ -4,10 +4,10 @@ const sql = require('mssql');
 
 // Connection configuration
 const config = {
-    server: 'BONGADU\SQLEXPRESS',
+    server: 'BONGADU\\SQLEXPRESS',
     database: 'BibleApp',
     authentication: {
-      type: 'Database engine',
+      type: 'default',
     },
   };
   
