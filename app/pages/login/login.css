@@ -1,3 +1,112 @@
-h1 {
-    color: darkblue;
+:root {
+    --text_color: rgb(70, 62, 67);
+    --button-color: #3F51B5;
+    --submit-text-color: #FFFF;
+    --background_colour: rgb(242, 237, 231);
+    --backgroung_color_inv: rgba(242, 237, 231, 0);
+    --background_colour_op: rgba(242, 237, 231, .5);
+}
+
+* {
+    padding: 0%;
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+#page-content {
+    display: flex;
+    background-color: var(--background_colour);
+}
+
+.app-title {
+    position: absolute;
+    right: 0;
+    padding: 2rem;
+    font-size: 3rem;
+}
+
+.images {
+    width: 30%;
+    height: 100vh;
+}
+
+.login-section {
+    height: 100%;
+    width: 45vh;
+    margin: auto;
+}
+
+.login-card {
+    text-align: center;
+    border-radius: 0.75rem;
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    background-color: var(--submit-text-color);
+}
+
+.login-header {
+    margin: 1rem 0rem 1rem 0rem;
+    color: var(--text_color);
+}
+
+.register-text {
+    padding: 1rem;
+}
+
+input[type=text],
+input[type=password] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
+input[type=submit] {
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    border: none;
+    background-color: var(--button-color);
+    color: var(--submit-text-color);
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+.mobile-image {
+    display: none;
+}
+
+@media only screen and (max-width: 840px) {
+    .images {
+        display: none;
+    }
+
+    #page-content {
+        height: 100vh;
+        display: block;
+    }
+
+    .app-title {
+        position: relative;
+        text-align: center;
+    }
+
+    .login-card {
+        top: 15%;
+        position: relative;
+        margin: auto;
+        width: 90%;
+        z-index: 2;
+    }
+
+    .mobile-image {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
 }
