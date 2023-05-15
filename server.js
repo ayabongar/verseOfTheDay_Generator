@@ -2,25 +2,46 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const _path = require('path');
-//installed MIME type library to avoid manually setting content types
+var qs = require('querystring');
 const mimeTypesLookup = require('mime-types').lookup;
-//Make Folder Name Global so that it does not change each time server runs
 let folderName = '';
 
 
 const server = http.createServer((request, response) => {
-
-    //Define Variables
     let file = '';
     let mimeType = '';
     let filePath = '';
 
-    //Handle Requests and Send Static Files
     let _URL = url.parse(request.url);
-    //strip leading and trailing slashes
     let path = _URL.path.replace(/^\/+|\/+$/g,"");
 
-    if(path == '' || path == 'login'){
+    if(path == 'UserLogin')
+    {
+        console.log('User Attempting To Login...');
+        const { headers, method, url } = request;
+        let body = [];
+        request.on('error', (err) => {
+          console.error(err);
+        }).on('data', (chunk) => {
+          body.push(chunk);
+        }).on('end', () => {
+          body = Buffer.concat(body).toString();
+          console.log(body);
+          // At this point, we have the headers, method, url and body, and can now
+          // do whatever we need to in order to respond to this request.
+        });
+
+        if(body)
+        {
+            console.log('Body - ' + body);
+        }
+        else
+        {
+            console.log('Body Not Populated ' + body);
+        }
+    }
+
+    if(path == ''){
         path = 'login.html';
     }
 
@@ -38,10 +59,8 @@ const server = http.createServer((request, response) => {
     if(fs.existsSync(filePath))
     {
         file = filePath;
-        console.log('Fetching Resources - ' + file);
     }else
     {
-        console.log('Path Does Not Exist - ' + filePath);
         file = __dirname + `/app/pages/error/error.html`;
     }
     
