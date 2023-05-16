@@ -2,44 +2,21 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const _path = require('path');
-var qs = require('querystring');
+const UserLogin = require('./UserLogin');
+const { type } = require('os');
 const mimeTypesLookup = require('mime-types').lookup;
 let folderName = '';
+let LoginSuccess = false;
 
 
 const server = http.createServer((request, response) => {
     let file = '';
     let mimeType = '';
     let filePath = '';
+    let body = '';
 
     let _URL = url.parse(request.url);
     let path = _URL.path.replace(/^\/+|\/+$/g,"");
-
-    if(path == 'UserLogin')
-    {
-        console.log('User Attempting To Login...');
-        const { headers, method, url } = request;
-        let body = [];
-        request.on('error', (err) => {
-          console.error(err);
-        }).on('data', (chunk) => {
-          body.push(chunk);
-        }).on('end', () => {
-          body = Buffer.concat(body).toString();
-          console.log(body);
-          // At this point, we have the headers, method, url and body, and can now
-          // do whatever we need to in order to respond to this request.
-        });
-
-        if(body)
-        {
-            console.log('Body - ' + body);
-        }
-        else
-        {
-            console.log('Body Not Populated ' + body);
-        }
-    }
 
     if(path == ''){
         path = 'login.html';
@@ -52,9 +29,53 @@ const server = http.createServer((request, response) => {
             folderName = path.slice(0, path.indexOf('.'));
         }
     }
+    
+    // if(path == 'UserLogin')
+    // {
+    //     let user = '';
+    //     console.log('User Attempting To Login...');
+    //     const { headers, method, url } = request;
+    //     request.on('error', (err) => {
+    //       console.error(err);
+    //     }).on('data', (chunk) => {
+    //       body += (chunk);
+    //     }).on('end', () => {
+    //       body = JSON.parse(body);
+    //       console.log(body);//IDK why but i need this to access the props??
+    //       console.log(body.username);
+    //       console.log(body.password);
+
+    //       user = {username: body.username, password: body.password};
+    //       console.log(user);
+
+    //     UserLogin.GetUserByUserName(user.username)
+    //     .then( (val) =>{
+
+    //         console.log(val);
+
+    //         let dbResult = val[0];
+
+    //         console.log(dbResult.username);
+    //         console.log(dbResult.password);
+
+    //         if(body.username == dbResult.username)
+    //         {
+    //             if(body.password == dbResult.password)
+    //             {
+    //                 console.log('USER NAME AND PASSWORD MATCH..');
+    //                 LoginSuccess = true;
+    //             }
+    //         }
+    //     })
+    //     .catch(err => console.log(err));
+    //     });
+    // }
+
+
 
     mimeType = mimeTypesLookup(path);
-    filePath = __dirname + `/app/pages/${folderName}/`+path;
+
+    console.log(filePath);
 
     if(fs.existsSync(filePath))
     {
@@ -63,6 +84,7 @@ const server = http.createServer((request, response) => {
     {
         file = __dirname + `/app/pages/error/error.html`;
     }
+
     
     fs.readFile(file, function(err, content){
         if(err){
