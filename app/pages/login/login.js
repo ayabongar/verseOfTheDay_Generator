@@ -12,7 +12,7 @@ form.addEventListener('submit', (e) => {
     let jsonData = JSON.stringify(value);
     console.log({jsonData});
 
-    fetch('http://localhost:8080/UserLogin', {
+    fetch('http://localhost:8080/auth/', {
         method:'POST',
         headers : {
             'Content-Type' : 'application/json'
