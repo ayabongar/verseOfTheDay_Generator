@@ -2,72 +2,104 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const _path = require('path');
-//installed MIME type library to avoid manually setting content types
+const UserLogin = require('./UserLogin');
+const { type } = require('os');
 const mimeTypesLookup = require('mime-types').lookup;
+let folderName = '';
+let LoginSuccess = false;
 
 
 const server = http.createServer((request, response) => {
-
-    //Define Variables
     let file = '';
-    let folderName = '';
     let mimeType = '';
+    let filePath = '';
+    let body = '';
 
-    //Handle Requests and Send Static Files
     let _URL = url.parse(request.url);
-
-    //strip leading and trailing slashes
     let path = _URL.path.replace(/^\/+|\/+$/g,"");
 
-    if(path == '' || path == 'login'){
+    if(path == ''){
         path = 'login.html';
     }
-    //Resolve Folder and MIME Type
-    folderName = handleFolderName(path);
+
+    if(path != undefined)
+    {
+        if(path.includes('.') && !path.includes('Images/'))
+        {
+            folderName = path.slice(0, path.indexOf('.'));
+        }
+    }
+    
+    // if(path == 'UserLogin')
+    // {
+    //     let user = '';
+    //     console.log('User Attempting To Login...');
+    //     const { headers, method, url } = request;
+    //     request.on('error', (err) => {
+    //       console.error(err);
+    //     }).on('data', (chunk) => {
+    //       body += (chunk);
+    //     }).on('end', () => {
+    //       body = JSON.parse(body);
+    //       console.log(body);//IDK why but i need this to access the props??
+    //       console.log(body.username);
+    //       console.log(body.password);
+
+    //       user = {username: body.username, password: body.password};
+    //       console.log(user);
+
+    //     UserLogin.GetUserByUserName(user.username)
+    //     .then( (val) =>{
+
+    //         console.log(val);
+
+    //         let dbResult = val[0];
+
+    //         console.log(dbResult.username);
+    //         console.log(dbResult.password);
+
+    //         if(body.username == dbResult.username)
+    //         {
+    //             if(body.password == dbResult.password)
+    //             {
+    //                 console.log('USER NAME AND PASSWORD MATCH..');
+    //                 LoginSuccess = true;
+    //             }
+    //         }
+    //     })
+    //     .catch(err => console.log(err));
+    //     });
+    // }
+
+
+
     mimeType = mimeTypesLookup(path);
 
-    if(fs.existsSync(__dirname + `/app/pages/${folderName}/`+path))
+    console.log(filePath);
+
+    if(fs.existsSync(filePath))
     {
-        file = __dirname + `/app/pages/${folderName}/`+path;
-        console.log('Fetching Resources - ' + file);
+        file = filePath;
     }else
     {
-        console.log('Path Does Not Exist - ' + __dirname + `/app/pages/${folderName}/`+path);
         file = __dirname + `/app/pages/error/error.html`;
     }
+
     
     fs.readFile(file, function(err, content){
         if(err){
             console.log(err);
-            response.writeHead(404);
-            response.end();
-        }else{
+                response.writeHead(404);
+                response.end();
+        } else {
             console.log(`Returning Path ${path}`);
             response.writeHead(200, {'Content-type':mimeType});
             response.end(content);
         }
     })
-    
 });
 
-function handleFolderName(path){
-    if(path.includes('.html'))
-    {
-        return path.replace('.html','');
-    }
-    else if(path.includes('.css'))
-    {
-       return path.replace('.css','');
-    }
-    else if(path.includes('.js'))
-    {
-       return path.replace('.js','');
-    }
-
-    return '';
-}
 
 server.listen(8080, 'localhost', () => {
     console.log('Server is listening on port 8080');
 });
-
