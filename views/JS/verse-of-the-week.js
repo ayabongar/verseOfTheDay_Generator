@@ -34,3 +34,29 @@ shareButton.addEventListener("click", (e) => {
     navigator.clipboard.writeText(text);
     popup(e, "Copied to clipboard!");
 })
+
+function popup(e, text) {
+    //Get position of cursor
+    let y = e.clientY - 8;
+    let x = e.clientX + 30;
+
+    let popupText = document.createElement("dialog");
+
+    popupText.classList.add("popup");
+    popupText.textContent = text;
+    popupText.style.opacity = 1;
+    popupText.style.position = "absolute";
+    popupText.style.top = y + "px";
+    popupText.style.left = x + "px";
+
+    main.appendChild(popupText)
+
+    let interval = setInterval(() => {
+        popupText.style.opacity = popupText.style.opacity - 0.02;
+    }, 10)
+
+    let timeout = setTimeout(() => {
+        main.removeChild(popupText);
+        clearInterval(interval);
+    }, 800);
+}
