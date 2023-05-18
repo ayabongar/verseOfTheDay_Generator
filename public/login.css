@@ -42,18 +42,6 @@ body{
     display: block;
 }
 
-.app-title {
-    position: absolute;
-    right: 0;
-    padding: 2rem;
-    font-size: 3rem;
-}
-
-.images {
-    width: 30%;
-    height: 100vh;
-}
-
 .login-section {
     min-width: 200px;
 }
