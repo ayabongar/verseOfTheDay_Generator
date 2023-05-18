@@ -16,9 +16,9 @@
         <section class="register-section">
             <section class="register-card">
                 <h1 class="register-header">Register</h1>
-                <form method="post">
-                    <input type="text" required placeholder="Username">
-                    <input type="password" required placeholder="Password">
+                <form id="form" action="/registerUser" method="POST">
+                    <input name="username" type="text" required placeholder="Username">
+                    <input name="password" type="password" required placeholder="Password">
                     <input type="password" required placeholder="Confirm Password">
                     <input type="submit" value="Register">
                     <p class="login-text">
@@ -29,7 +29,7 @@
         </section>
     </main>
 
-    <script src="register.js"></script>
+    <script src="./javascript/register.js"></script>
 </body>
 
 </html>
