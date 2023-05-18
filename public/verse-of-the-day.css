@@ -26,7 +26,7 @@ main{
     align-items: center;
     justify-content: center;
 
-    background-image: url("./verse-of-the-day/Images/TopLeft.png"),url("./verse-of-the-day/Images/TopRight.png"), url("./verse-of-the-day/Images/BottomLeft.png"), url("./verse-of-the-day/Images/BottomRight.png");
+    background-image: url("./Images/TopLeft.png"),url("./Images/TopRight.png"), url("./Images/BottomLeft.png"), url("./Images/BottomRight.png");
     background-position:left top, right top, left bottom, right bottom;
     background-repeat: no-repeat;
     background-size: contain;
@@ -36,7 +36,7 @@ main{
 nav{
     width: fit-content;
     display: flex;
-    margin: 2rem 2rem auto auto;
+    margin: 1.5rem 1.5rem auto auto;
     font-size: 1.5em;
     position: fixed;
     top: 0;
@@ -45,10 +45,22 @@ nav{
     font-family: 'Raleway', sans-serif;
     font-weight: 600;
     border-bottom: 3px var(--background_colour_op) solid;
-    padding-bottom: .5rem;
+    border-top: 3px solid rgba(0, 0, 0, 0);
+    border-left: 3px solid rgba(0, 0, 0, 0);
+    border-right: 3px solid rgba(0, 0, 0, 0);
+    padding: .5rem;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius:5px;
 
     animation: jump-shaking .9s 2;
     animation-delay: 1s;
+    transition: border .2s;
+}
+nav:hover{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius:10px;
+    border-left: 3px solid var(--background_colour_op);
+    border-right: 3px solid var(--background_colour_op);
 }
 nav menu ol{
     list-style: none;
