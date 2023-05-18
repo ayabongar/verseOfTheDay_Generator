@@ -1,3 +1,13 @@
-h1 {
-    color: darkblue;
+:root{
+    --background_colour_op: rgba(139, 145, 131, .5);
 }
+main{
+    background-image: url("./Images/TopLeft.png"), url("./Images/BottomLeft.png"), url("./Images/TopRight2.png"), url("./Images/BottomRight2.png");
+    background-position:left top, left bottom, top right, bottom right;
+}
+nav{
+    margin: 1.5rem 1.5rem auto auto;
+    border-bottom: 3px var(--background_colour_op) solid;
+    left: 0;
+}
+
