@@ -80,6 +80,11 @@ app.post('/auth', (req,res) =>{
     }
 })
 
+
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname, '/views/error.html'));
+})
+
 app.listen(port, err =>{
     if(err){
         return console.log(err);
