@@ -80,6 +80,38 @@ app.post('/auth', (req,res) =>{
     }
 })
 
+app.get("/api/verse-day",(req, res)=>{
+    //used to see if the user has already liked it
+    let username = req.session.username;
+
+    let date = new Date();
+    //+1 to account for indexing
+    let day = date.getDay() + 1;
+    let month = date.getMonth() + 1;
+    let id = day.toString() + month.toString();
+    //make db call
+
+    //make api call
+    //verse is populated by the api request and db call to see if the verse is liked
+    //dummy data
+    let verse = {
+        title:"John 3:16",
+        body:"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not " +
+        "perish but have eternal life.",
+        liked:true,
+    };
+    // res.status(200).json(verse);
+    res.send(verse)
+})
+
+app.patch("/api/liked/:isLiked", (req, res)=>{
+    let isLiked = req.params.isLiked; //boolean
+    let username = req.session.username;
+    //apply update to db with username and isLiked status
+    
+    res.send("Successfull")
+})
+
 app.listen(port, err =>{
     if(err){
         return console.log(err);
