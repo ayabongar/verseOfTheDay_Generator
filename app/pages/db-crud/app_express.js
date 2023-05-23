@@ -36,7 +36,7 @@ app.get('/verses/:theID', async (req, res) => {
   }
 });
 
-app.get('/favorites', async (req, res) => {
+app.get('/favorites/:user_id', async (req, res) => {
   try {
     const pool =  await sql.connect(config);    
     const result = await pool.request().query('SELECT * FROM VERSES WHERE id IN (SELECT verse_id FROM FAVORITES WHERE user_id IN (@user_id)');
@@ -46,7 +46,7 @@ app.get('/favorites', async (req, res) => {
   }
 });
 //
-app.post('/favorites', async (req, res) => {
+app.post('/favorites/:user_id/:verse_id', async (req, res) => {
   const { user_id, verse_id } = req.query;
   try {
     const pool = await sql.connect(config);
@@ -61,7 +61,7 @@ app.post('/favorites', async (req, res) => {
   }
 });
 //
-app.post('/verses', async (req, res) => {
+app.post('/verses/:text/:reference', async (req, res) => {
   const { text, reference } = req.query;
   try {
     const pool = await sql.connect(config);
@@ -76,7 +76,7 @@ app.post('/verses', async (req, res) => {
   }
 });
 
-app.delete('/favorites', async (req, res) => {
+app.delete('/favorites/:user_id/:verse_id', async (req, res) => {
   const { user_id, verse_id } = req.query;
   try {
     const pool = await sql.connect(config);
