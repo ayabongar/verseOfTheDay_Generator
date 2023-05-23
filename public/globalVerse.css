@@ -1,42 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&display=swap');
-
-:root{
-    --background_colour: rgb(242, 237, 231);
-    --background_colour_op: rgba(242, 237, 231, .5);
-    --backgroung_color_inv: rgba(242, 237, 231, 0);
-    --share_colour: rgb(139,145,131);
-    --share_outline: rgb(94, 98, 89);
-    --text_color: rgb(70,62,67);
-}
-
-*{
-    padding: 0%;
-    margin: 0;
-}
-body{
-    background-color: var(--background_colour);
-    width: 100vw;
-    height: 100vh;
-}
-main{
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background-image: url("./verse-of-the-day/Images/TopLeft.png"),url("./verse-of-the-day/Images/TopRight.png"), url("./verse-of-the-day/Images/BottomLeft.png"), url("./verse-of-the-day/Images/BottomRight.png");
-    background-position:left top, right top, left bottom, right bottom;
-    background-repeat: no-repeat;
-    background-size: contain;
-    
-    color: var(--text_color);
-}
 nav{
     width: fit-content;
     display: flex;
-    margin: 2rem 2rem auto auto;
+    margin: 1.5rem 1.5rem auto auto;
     font-size: 1.5em;
     position: fixed;
     top: 0;
@@ -45,10 +10,22 @@ nav{
     font-family: 'Raleway', sans-serif;
     font-weight: 600;
     border-bottom: 3px var(--background_colour_op) solid;
-    padding-bottom: .5rem;
+    border-top: 3px solid rgba(0, 0, 0, 0);
+    border-left: 3px solid rgba(0, 0, 0, 0);
+    border-right: 3px solid rgba(0, 0, 0, 0);
+    padding: .5rem;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius:5px;
 
     animation: jump-shaking .9s 2;
     animation-delay: 1s;
+    transition: border .2s;
+}
+nav:hover{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius:10px;
+    border-left: 3px solid var(--background_colour_op);
+    border-right: 3px solid var(--background_colour_op);
 }
 nav menu ol{
     list-style: none;
@@ -93,17 +70,7 @@ nav menu ol a{
   'GRAD' 200,
   'opsz' 48;
 }
-.like .material-symbols-rounded:hover{
-    -webkit-text-stroke: 3px maroon;
-}
-.like.click > i{
-    -webkit-text-stroke: 3px maroon;
-    color: red;
-    font-variation-settings:
-    'FILL' 100;
 
-    animation: pop .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-}
 .share .material-symbols-rounded:hover{
     -webkit-text-stroke: 3px var(--share_outline);
     color: var(--share_colour);
@@ -126,6 +93,7 @@ nav menu ol a{
         -1px  1px 0 var(--background_colour),
         -1px  0   0 var(--background_colour);
 }
+
 @media (max-aspect-ratio:1/1) or (max-width: 815px) {
     .verse{
         margin: 0 auto 10rem auto;

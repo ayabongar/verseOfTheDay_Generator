@@ -1,0 +1,16 @@
+*{
+    padding: 0%;
+    margin: 0;
+}
+
+.like .material-symbols-rounded:hover{
+    -webkit-text-stroke: 3px maroon;
+}
+.like.click > i{
+    -webkit-text-stroke: 3px maroon;
+    color: red;
+    font-variation-settings:
+    'FILL' 100;
+
+    animation: pop .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}

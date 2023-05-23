@@ -1,0 +1,64 @@
+* {
+    padding: 0%;
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.app-title {
+    position: absolute;
+    padding: 2rem;
+    font-size: 3rem;
+}
+
+.register-section {
+    min-width: 200px;
+}
+
+.register-card {
+    text-align: center;
+    display: block;
+    width: 80%;
+    height: 100%;
+    margin: auto;
+    border-radius: 0.75rem;
+    border: 0;
+}
+
+.register-header {
+    margin: 1rem 0rem 1rem 0rem;
+    color: var(--text_color);
+}
+
+.login-text {
+    padding: 1rem;
+}
+
+input[type=text],
+input[type=password] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
+input[type=submit] {
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    border: none;
+    background-color: var(--button-color);
+    color: var(--submit-text-color);
+    font-weight: 600;
+    border-radius: 5px;
+
+    transition:all .15s ease;
+}
+
+input[value=Register]:hover{
+    cursor: pointer;
+    letter-spacing: 2px;
+    background-color: var(--button-hover-color);
+}

@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mime-types": "^2.1.35",
+    "msnodesqlv8": "^3.1.0",
+    "mssql": "^9.1.1",
+    "nodemon": "^2.0.22"
+  },
+  "scripts": {
+    "devstart": " nodemon server.js"
+  }
+}
