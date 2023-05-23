@@ -1,83 +1,89 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
+const app = express();
+const port = process.env.port || 8080;
 const path = require('path');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const login_handler = require('./UserLogin');
+const reg_handler = require('./UserRegistration');
 
-const rootDirectory = path.join(__dirname, 'app');
 
-const server = http.createServer((request, response) => {
-    if (request.url.startsWith('/api/')) {
-        if (request.method === 'GET') {
-            if (request.url === '/api/users') {
-                const users = [
-                    { id: 1, username: 'testUser', password: 'password1', hasVoted: false }
-                ]
 
-                response.writeHead(200, { 'Content-Type': 'application/json' });
-                response.write(JSON.stringify(users));
-                response.end();
-            } else {
-                response.writeHead(404);
-                response.write('API Endpoint not found');
-                response.end();
-            }
-        } else {
-            response.writeHead(405);
-            response.write('Method not allowed');
-            response.end();
+app.use(session({
+    secret: 'secret',
+    resave : true,
+    saveUninitialized : true
+}))
+app.use(express.static(path.join(__dirname,'/public')));
+app.use(express.static(path.join(__dirname,'/views')));
+app.use(express.static(path.join(__dirname,'/views/javascript')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
+app.get('/', (req,res) =>{
+    res.sendFile(path.join(__dirname, '/views/login.html'));
+})
+
+app.get('/register', (req,res) =>{
+    res.sendFile(path.join(__dirname, '/views/register.html'));
+})
+
+app.get('/verseoftheday', (req,res) =>{
+    if(req.session.loggedin){
+        res.sendFile(path.join(__dirname, '/views/verse-of-the-day.html'));
+    }else{
+        res.redirect('/');
+    }
+})
+
+app.get('/verseoftheweek', (req,res) =>{
+    if(req.session.loggedin){
+        res.sendFile(path.join(__dirname, '/views/verse-of-the-week.html'));
+    }else{
+        res.redirect('/');
+    }
+})
+
+app.post('/registerUser', (req,res) =>{
+    let username = req.body.username;
+    let password = req.body.password;
+    if(username && password){
+        //TODO - SANITIZE TEXT
+        try{
+            reg_handler.RegisterUser(username,password)
+            .then(result =>{
+                console.log('user registered successfully');
+                res.redirect('/');
+            })
+        }catch(error){
+            res.status(500).send();
         }
-    } else if(request.url.endsWith('.txt')) {
-        const filePath = path.join(__dirname, request.url);
-        fs.exists(filePath, function (exists) {
-            if (!exists) {
-                response.writeHead(404, { 'Content-Type': 'text/plain' });
-                response.end('404 Not Found');
-                return;
+    }
+
+})
+
+app.post('/auth', (req,res) =>{
+    let username = req.body.username;
+    let password = req.body.password;
+    if(username && password){
+        login_handler.VerifyLogin(username,password)
+        .then(result => {
+            if(result){
+                console.log('user login succcess');
+                req.session.loggedin = true;
+                req.session.username = result.username;
+                res.redirect('/verseoftheday')
+            }else{
+                res.json({success: 'fail'});
             }
-
-            fs.readFile(filePath, function (err, data) {
-                if (err) {
-                    response.writeHead(500, { 'Content-Type': 'text/plain' });
-                    response.end('500 Internal Server Error');
-                    return;
-                }
-
-                response.writeHead(200, { 'Content-Type': 'text/plain' });
-                response.write(data);
-                response.end();
-            });
-        });
-    } else {
-        const filePath = path.join(__dirname, 'app/pages', request.url);
-
-        fs.exists(filePath, function (exists) {
-            if (!exists) {
-                response.writeHead(404, { 'Content-Type': 'text/html' });
-                response.end('404 Not Found');
-                return;
-            }
-
-            fs.readFile(filePath, function (err, data) {
-                if (err) {
-                    response.writeHead(500, { 'Content-Type': 'text/html' });
-                    response.end('500 Internal Server Error');
-                    return;
-                }
-
-                let contentType = 'text/html';
-                if (request.url.endsWith('.css')) {
-                    contentType = 'text/css';
-                } else if (request.url.endsWith('.js')) {
-                    contentType = 'text/javascript';
-                }
-
-                response.writeHead(200, { 'Content-Type': contentType });
-                response.write(data);
-                response.end();
-            });
         });
     }
-});
+})
 
-server.listen(8080, () => {
-    console.log('Server is listening on port 8080');
-});
+app.listen(port, err =>{
+    if(err){
+        return console.log(err);
+    }
+    console.log(`Listening On ${port}`);
+    
+})

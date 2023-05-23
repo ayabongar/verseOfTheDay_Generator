@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&display=swap');
+
+:root{
+    --text_color: rgb(70, 62, 67);
+    --button-color: #3F51B5;
+    --button-hover-color:#1e2759;
+    --submit-text-color: #FFFF;
+    --background_colour: rgb(242, 237, 231);
+    --background_colour_op: rgba(242, 237, 231, .5);
+    --background_colour_week_op:rgba(139, 141, 131, .5);
+    --backgroung_color_inv: rgba(242, 237, 231, 0);
+    --share_colour: rgb(139,145,131);
+    --share_outline: rgb(94, 98, 89);
+    --text_color: rgb(70,62,67);
+}
+
+body{
+    background-color: var(--background_colour);
+    width: 100vw;
+    height: 100vh;
+}
+
+main{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-image: url("./Images/TopLeft.png"),url("./Images/TopRight.png"), url("./Images/BottomLeft.png"), url("./Images/BottomRight.png");
+    background-position:left top, right top, left bottom, right bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
+    
+    color: var(--text_color);
+    font-family: 'Raleway', sans-serif;
+}

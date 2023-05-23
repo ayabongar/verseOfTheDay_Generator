@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;600&display=swap');
+
+:root {
+    --text_color: rgb(70, 62, 67);
+    --button-color: #3F51B5;
+    --button-hover-color:#1e2759;
+    --submit-text-color: #FFFF;
+    --background_colour: rgb(242, 237, 231);
+    --backgroung_color_inv: rgba(242, 237, 231, 0);
+    --background_colour_op: rgba(242, 237, 231, .5)
+}
+
+* {
+    padding: 0%;
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+body{
+    background-color: var(--background_colour);
+    width: 100vw;
+    height: 100vh;
+}
+#page-content {
+
+    height: 100%;
+    width: 100%;
+    position: fixed;
+
+    background-image: url("./Images/TopLeft.png"),url("./Images/TopRight.png"), url("./Images/BottomLeft.png"), url("./Images/BottomRight.png");
+    background-position:left top, right top, left bottom, right bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Raleway', sans-serif;
+}
+#form{
+    width: 100%;
+    display: block;
+}
+
+.login-section {
+    min-width: 200px;
+}
+
+.login-card {
+    text-align: center;
+    border-radius: 0.75rem;
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+}
+
+.login-header {
+    margin: 1rem 0rem 1rem 0rem;
+    color: var(--text_color);
+    font-size: 2rem;
+}
+
+.register-text {
+    padding: 1rem;
+}
+
+input[type=text],
+input[type=password] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
+input[type=submit] {
+    margin-top: 10px;
+    width: 50%;
+    padding: 10px;
+    border: none;
+    background-color: var(--button-color);
+    color: var(--submit-text-color);
+    font-weight: 600;
+    border-radius: 5px;
+
+    transition:all .15s ease;
+}
+
+input[value=Login]:hover{
+    cursor: pointer;
+    letter-spacing: 3px;
+    background-color: var(--button-hover-color);
+}
