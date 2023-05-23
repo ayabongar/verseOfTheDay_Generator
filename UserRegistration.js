@@ -1,6 +1,6 @@
 const sql = require('msnodesqlv8');
 const bcrypt = require('bcrypt');
-const connectionString = 'server=MIKHAILG\\SQLEXPRESS;Database=BibleApp;Trusted_Connection=Yes;Driver={SQL Server}';
+const connectionString = 'server=KYLEP\\SQLEXPRESS;Database=BibleApp;Trusted_Connection=Yes;Driver={SQL Server}';
 
 async function AddUser(username,password)
 {
