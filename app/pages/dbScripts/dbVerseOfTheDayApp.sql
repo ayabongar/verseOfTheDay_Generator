@@ -26,7 +26,7 @@ CREATE TABLE VERSES (
 CREATE TABLE FAVORITES (
     id INT PRIMARY KEY IDENTITY(1,1),
     user_id INT NOT NULL,
-    verse_id INT NOT NULL,
+    verse_id VARCHAR(5) PRIMARY KEY,
     created_at DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (user_id) REFERENCES USERS(id),
     FOREIGN KEY (verse_id) REFERENCES VERSES(id)
@@ -409,17 +409,17 @@ VALUES ('0101', 'GEN', 1, 1, 5),
 	('1228', 'JOHN', 14, 1, 3),
 	('1229', 'ACTS', 1, 8, 8),
 	('1230', 'ROM', 8, 28, 28),
-	('1231', '1COR', 16, 14, 14)
+	('1231', '1COR', 16, 14, 14);
 --
 -- Insert test data into FAVORITES table
 INSERT INTO FAVORITES (user_id, verse_id) 
 VALUES
-    (1, 1),
-    (1, 2),
-    (2, 1),
-    (2, 4),
-    (3, 3),
-    (4, 5),
-    (5, 2),
-    (5, 3),
-    (5, 4);
+    (1, 0101),
+    (1, 0102),
+    (2, 0103),
+    (2, 0104),
+    (3, 0105),
+    (4, 0106),
+    (5, 0107),
+    (5, 0109),
+    (5, 0110);
