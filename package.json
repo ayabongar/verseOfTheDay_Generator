@@ -12,6 +12,6 @@
     "xhr2": "^0.2.1"
   },
   "scripts": {
-    "devstart": " nodemon server.js"
+    "start": "node server.js"
   }
 }
