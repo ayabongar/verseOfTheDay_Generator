@@ -6,6 +6,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const XMLHttpRequest = require('xhr2');
 const sql = require('mssql');
+const bcrypt = require('bcryptjs');
 require('dotenv').config()
 
 let sqlConfig = {
@@ -25,8 +26,9 @@ const BIBLE_API_KEY = process.env.BIBLE_API_KEY;
 
 app.use(session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    resave: false, //for every req create new session even if same user
+    saveUninitialized: false, //if not touched session do not save
+    cookie: { path: '/', httpOnly: true, maxAge: 30000}
 }))
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/views')));
@@ -91,6 +93,11 @@ app.post('/auth', (req, res) => {
                 }
             });
     }
+})
+
+app.get('/logout',(req,res)=>{
+    req.session.destroy();
+    res.redirect('/');
 })
 
 app.get("/api/verse-day", (req, res) => {
@@ -241,7 +248,7 @@ async function VerifyLogin(username, password) {
     if (result.length !== 0) {
         let db_password = result[0].password;
         try {
-            if (password == db_password) {
+            if (await bcrypt.compare(password, db_password)) {
                 return true;
             }
         } catch (error) {
@@ -275,7 +282,9 @@ async function RegisterUser(username, password) {
 async function EncryptPassword(password) {
     try {
         //Add new encryption here
-        let hashedPassword = password;
+        let saltbae = await bcrypt.genSalt();
+        let hashbrown = await bcrypt.hash(password,saltbae);
+        let hashedPassword = hashbrown;
         return hashedPassword;
     } catch (error) {
         throw error;
