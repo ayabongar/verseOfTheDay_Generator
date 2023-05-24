@@ -12,6 +12,9 @@
     --share_colour: rgb(139,145,131);
     --share_outline: rgb(94, 98, 89);
     --text_color: rgb(70,62,67);
+    --main-bg-color: #1A535C;
+    --loader-bg-color: #FF6B6B;
+    --loader-acc-color: #4ECDC4;
 }
 
 body{

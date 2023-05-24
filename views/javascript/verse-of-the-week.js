@@ -12,6 +12,8 @@ async function populateVerses() {
     let verse = document.getElementsByClassName("verse")[0];
     verse.getElementsByTagName("h1")[0].textContent = resJson.title;
     verse.getElementsByTagName("blockquote")[0].textContent = resJson.body;
+    shareButton.classList.remove("hidden");
+    loader.classList.add("hidden");
 }
 
 window.onload = populateVerses;
