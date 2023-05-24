@@ -5,28 +5,39 @@ let likeButton = document.getElementsByClassName("like")[0];
 let likeClicked = false;
 let shareButton = document.getElementsByClassName("share")[0];
 
-function populateVerse() {
+async function populateVerse() {
     //make api call
-    let title = "John 3:16";
-    let content = "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not " +
-        "perish but have eternal life.";
+    let title = "";
+    let content = "";
+    let resObj = await fetch("/api/verse-day")
+    let resJson = await resObj.json()
+    
     let verse = document.getElementsByClassName("verse")[0];
-    verse.getElementsByTagName("h1")[0].textContent = title;
-    verse.getElementsByTagName("blockquote")[0].textContent = content;
+    verse.getElementsByTagName("h1")[0].textContent = resJson.title;
+    verse.getElementsByTagName("blockquote")[0].textContent = resJson.body;
+    
+    //handle if liked
+    likeClicked = resJson.liked;
+    likeButton.classList.add("click");
 }
 
 window.onload = populateVerse;
 
-likeButton.addEventListener("click", () => {
+likeButton.addEventListener("click", async () => {
     if (!likeClicked) {
         likeButton.classList.add("click");
-        //send req to api to update db
-        //in request, the username must be checked, so that you can see if its already been liked
         likeClicked = !likeClicked;
     } else {
         likeButton.classList.remove("click");
-        //send req to api to update db
         likeClicked = !likeClicked;
+    }
+    const handle = await fetch(`/api/liked/${likeClicked}`,{
+        method:"PATCH"
+    })
+    if (handle.ok){
+        //all good
+    }else{
+        alert("There is an issue with the database, please try again");
     }
 })
 
