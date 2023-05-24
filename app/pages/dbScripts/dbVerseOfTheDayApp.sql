@@ -42,7 +42,7 @@ VALUES
     ('user5', 'password5');
 
 -- Insert test data into VERSES table
-INSERT INTO VERSES (Book, chapter, startVerse, EndVerse)
+INSERT INTO VERSES (id, Book, chapter, startVerse, EndVerse)
 VALUES  INSERT INTO VERSES (Book, chapter, startVerse, EndVerse)
 VALUES ('0101', 'GEN', 1, 1, 5),
 	('0102', 'PSA', 23, 1, 6),
