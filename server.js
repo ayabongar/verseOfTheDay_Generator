@@ -10,8 +10,8 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config()
 
 let sqlConfig = {
-    user: process.env.DATABASE_USER, 
-    password: process.env.DATABASE_PASSWORD, 
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
     server: process.env.DATABASE_SERVER,
     database: process.env.DATABASE,
     authentication: {
@@ -28,7 +28,7 @@ app.use(session({
     secret: 'secret',
     resave: false, //for every req create new session even if same user
     saveUninitialized: false, //if not touched session do not save
-    cookie: { path: '/', httpOnly: true, maxAge: 30000}
+    cookie: { path: '/', httpOnly: true, maxAge: 30000 }
 }))
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/views')));
@@ -95,23 +95,19 @@ app.post('/auth', (req, res) => {
     }
 })
 
-app.get('/logout',(req,res)=>{
+app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
 
 app.get("/api/verse-day", (req, res) => {
-    let username = req.session.username;
-
     let id = getID();
 
     let verseTitle;
     let verseContent;
-    //to be replaced with ID with valid table
-    const verseIndex = new Date().getDate();
 
-    getVerseKey(verseIndex).then((verseKeyData) => {
-        getVerse(verseKeyData[0].verseKey, BIBLE_API_KEY).then((data) => {
+    getVerseKey(id).then((verseKeyData) => {
+        getVerse(verseKeyData[0], BIBLE_API_KEY).then((data) => {
             verseTitle = removeNonAlphabetic(data.reference);
             verseContent = removeNonAlphabetic(data.content);
 
@@ -126,31 +122,20 @@ app.get("/api/verse-day", (req, res) => {
 })
 
 app.get("/api/verse-week", async (req, res) => {
-    getVerses().then((data) => {
-        const verses = data;
-        const verseIndex = new Date().getDate();
-        let startDay;
+    getVerseOfTheWeek().then((data) => {
+        const verseID = data[0].verse_id;
+        getVerseKey(verseID).then((verseKeyData) => {
+            getVerse(verseKeyData[0], BIBLE_API_KEY).then((data) => {
+                verseTitle = removeNonAlphabetic(data.reference);
+                verseContent = removeNonAlphabetic(data.content);
 
-        verseIndex - 7 < 0 ? startDay = 0 : startDay = verseIndex - 7;
-
-        let mostLikedIndex = startDay;
-        for (let i = startDay; i <= verseIndex; i++) {
-            if (verses[i].likes >= verses[mostLikedIndex].likes) {
-                mostLikedIndex = i;
-            }
-        }
-
-        let mostLikedVerseKey = verses[mostLikedIndex].verseKey;
-
-        getVerse(mostLikedVerseKey, BIBLE_API_KEY).then((data) => {
-            verseTitle = removeNonAlphabetic(data.reference);
-            verseContent = removeNonAlphabetic(data.content);
-
-            let verse = {
-                title: verseTitle,
-                body: verseContent,
-            };
-            res.send(verse)
+                let verse = {
+                    title: verseTitle,
+                    body: verseContent,
+                    liked: true,
+                };
+                res.send(verse)
+            });
         });
 
     });
@@ -170,22 +155,22 @@ app.post('/favorites', async (req, res) => {
     //verse id is just the date, day
     const verse_id = getID();
     const username = req.session.username;
-    console.log("updating favourite for user: "+ username)
+    console.log("updating favourite for user: " + username)
     try {
         const pool = await sql.connect(sqlConfig);
         await pool
             .request()
             .input('username', sql.VarChar, username)
-            .input('verse_id', sql.Int, verse_id)
+            .input('verse_id', sql.VarChar, verse_id)
             .query('INSERT INTO FAVORITES (user_id, verse_id) VALUES ((SELECT id FROM USERS where username = @username), @verse_id)');
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred' });
     }
-    
+
 });
 
-app.get('/favorite', async (req, res)=>{
+app.get('/favorite', async (req, res) => {
     const username = req.session.username;
     let verse_id = getID();
     try {
@@ -193,10 +178,9 @@ app.get('/favorite', async (req, res)=>{
         const result = await pool
             .request()
             .input('username', sql.VarChar, username)
-            .input('verse_id', sql.Int, verse_id)
+            .input('verse_id', sql.VarChar, verse_id)
             .query('SELECT * FROM FAVORITES WHERE user_id=(SELECT id FROM USERS where username = @username) AND verse_id=@verse_id');
-        console.log(result)
-            res.json(result.rowsAffected);
+        res.json(result.rowsAffected);
     } catch (error) {
         res.status(500).json({ error: 'An error occurred' });
     }
@@ -205,13 +189,13 @@ app.get('/favorite', async (req, res)=>{
 app.delete('/favorites', async (req, res) => {
     const verse_id = 24;
     const username = req.session.username;
-    console.log("Deleting favourite for user: "+ username)
+    console.log("Deleting favourite for user: " + username)
     try {
         const pool = await sql.connect(sqlConfig);
         await pool
             .request()
             .input('username', sql.VarChar, username)
-            .input('verse_id', sql.Int, verse_id)
+            .input('verse_id', sql.VarChar, verse_id)
             .query('DELETE FROM FAVORITES WHERE user_id = (SELECT id FROM USERS where username = @username) AND verse_id = @verse_id');
         res.json({ success: true });
     } catch (error) {
@@ -233,7 +217,6 @@ async function GetUserByUserName(username) {
             let connection = await sql.connect(sqlConfig);
 
             let resultSet = await connection.request().query(`SELECT u.username, u.password FROM USERS u WHERE u.username='${username}'`);
-
             resolve(resultSet.recordset);
             connection.close();
         }
@@ -265,7 +248,6 @@ async function AddUser(username, password) {
         try {
             let connection = await sql.connect(sqlConfig);
             let resultSet = await connection.request().query(`INSERT INTO dbo.USERS (username, password) VALUES ('${username}','${hashedPassword}');`);
-
             resolve(resultSet.recordset);
             connection.close();
         }
@@ -283,7 +265,7 @@ async function EncryptPassword(password) {
     try {
         //Add new encryption here
         let saltbae = await bcrypt.genSalt();
-        let hashbrown = await bcrypt.hash(password,saltbae);
+        let hashbrown = await bcrypt.hash(password, saltbae);
         let hashedPassword = hashbrown;
         return hashedPassword;
     } catch (error) {
@@ -292,6 +274,11 @@ async function EncryptPassword(password) {
 }
 
 function getVerse(verseKey, BIBLE_API_KEY) {
+    let verse = verseKey.Book + "." + verseKey.chapter + "." + verseKey.startVerse;
+    //not liking this in the req, doesnt seem to work with EndVerse
+    // if(verseKey.EndVerse !== undefined || verseKey.EndVerse !== null){
+    //     verse += "-"+verseKey.EndVerse
+    // }
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.addEventListener(`readystatechange`, function () {
@@ -302,7 +289,7 @@ function getVerse(verseKey, BIBLE_API_KEY) {
         });
         xhr.open(
             `GET`,
-            `https://api.scripture.api.bible/v1/bibles/55212e3cf5d04d49-01/verses/${verseKey}?content-type=text&include-chapter-numbers=false`
+            `https://api.scripture.api.bible/v1/bibles/55212e3cf5d04d49-01/verses/${verse}?content-type=text&include-chapter-numbers=false`
         );
         xhr.setRequestHeader(`api-key`, BIBLE_API_KEY);
         xhr.onerror = () => reject(xhr.statusText);
@@ -314,7 +301,23 @@ async function getVerseKey(verseID) {
     return new Promise(async (resolve, reject) => {
         try {
             let connection = await sql.connect(sqlConfig);
-            let resultSet = await connection.request().query(`SELECT v.verseKey FROM VERSES v WHERE v.id='${verseID}'`);
+            let resultSet = await connection.request().query(`SELECT * FROM VERSES v WHERE v.id='${verseID}'`);
+            console.log(resultSet)
+            resolve(resultSet.recordset);
+            connection.close();
+        }
+        catch (err) {
+            console.error(err.message);
+        }
+    });
+};
+
+//not used, didnt know if i could remove or not
+async function getVerses() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let connection = await sql.connect(sqlConfig);
+            let resultSet = await connection.request().query(`SELECT * FROM FAVOURITE`);
 
             resolve(resultSet.recordset);
             connection.close();
@@ -325,11 +328,11 @@ async function getVerseKey(verseID) {
     });
 };
 
-async function getVerses() {
+async function getVerseOfTheWeek() {
     return new Promise(async (resolve, reject) => {
         try {
             let connection = await sql.connect(sqlConfig);
-            let resultSet = await connection.request().query(`SELECT * FROM VERSES`);
+            let resultSet = await connection.request().query(`SELECT TOP 1 verse_id FROM FAVORITES GROUP BY verse_id ORDER BY COUNT(verse_id) DESC`);
 
             resolve(resultSet.recordset);
             connection.close();
@@ -345,10 +348,10 @@ function removeNonAlphabetic(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function getID(){
+function getID() {
     let date = new Date();
-    let day = date.getDay() + 1;
-    let month = date.getMonth() + 1;
-    let id = day.toString() + month.toString();
+    let day = (date.getUTCDate()).toString().padStart(2, "0");
+    let month = (date.getMonth() + 1).toString().padStart(2, "0");
+    let id = month + day
     return id;
 }
