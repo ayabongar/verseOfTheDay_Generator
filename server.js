@@ -84,7 +84,7 @@ app.post('/auth', (req, res) => {
                 if (result) {
                     console.log('user login succcess');
                     req.session.loggedin = true;
-                    req.session.username = result.username;
+                    req.session.username = username;
                     res.redirect('/verseoftheday')
                 } else {
                     res.json({ success: 'fail' });
@@ -96,13 +96,11 @@ app.post('/auth', (req, res) => {
 app.get("/api/verse-day", (req, res) => {
     let username = req.session.username;
 
-    let date = new Date();
-    let day = date.getDay() + 1;
-    let month = date.getMonth() + 1;
-    let id = day.toString() + month.toString();
+    let id = getID();
 
     let verseTitle;
     let verseContent;
+    //to be replaced with ID with valid table
     const verseIndex = new Date().getDate();
 
     getVerseKey(verseIndex).then((verseKeyData) => {
@@ -151,16 +149,9 @@ app.get("/api/verse-week", async (req, res) => {
     });
 })
 
-app.patch("/api/liked/:isLiked", (req, res) => {
-    let isLiked = req.params.isLiked;
-    let username = req.session.username;
-
-    res.send("Successfull")
-})
-
 app.get('/favorites/:user_id', async (req, res) => {
     try {
-        const pool = await sql.connect(config);
+        const pool = await sql.connect(sqlConfig);
         const result = await pool.request().query('SELECT * FROM VERSES WHERE id IN (SELECT verse_id FROM FAVORITES WHERE user_id IN (@user_id)');
         res.json(result.recordset);
     } catch (error) {
@@ -168,30 +159,53 @@ app.get('/favorites/:user_id', async (req, res) => {
     }
 });
 
-app.post('/favorites/:user_id/:verse_id', async (req, res) => {
-    const { user_id, verse_id } = req.query;
+app.post('/favorites', async (req, res) => {
+    //verse id is just the date, day
+    const verse_id = getID();
+    const username = req.session.username;
+    console.log("updating favourite for user: "+ username)
     try {
-        const pool = await sql.connect(config);
+        const pool = await sql.connect(sqlConfig);
         await pool
             .request()
-            .input('user_id', sql.Int, user_id)
+            .input('username', sql.VarChar, username)
             .input('verse_id', sql.Int, verse_id)
-            .query('INSERT INTO FAVORITES (user_id, verse_id) VALUES (@user_id, @verse_id)');
+            .query('INSERT INTO FAVORITES (user_id, verse_id) VALUES ((SELECT id FROM USERS where username = @username), @verse_id)');
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred' });
     }
+    
 });
 
-app.delete('/favorites/:user_id/:verse_id', async (req, res) => {
-    const { user_id, verse_id } = req.query;
+app.get('/favorite', async (req, res)=>{
+    const username = req.session.username;
+    let verse_id = getID();
     try {
-        const pool = await sql.connect(config);
+        const pool = await sql.connect(sqlConfig);
+        const result = await pool
+            .request()
+            .input('username', sql.VarChar, username)
+            .input('verse_id', sql.Int, verse_id)
+            .query('SELECT * FROM FAVORITES WHERE user_id=(SELECT id FROM USERS where username = @username) AND verse_id=@verse_id');
+        console.log(result)
+            res.json(result.rowsAffected);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred' });
+    }
+})
+
+app.delete('/favorites', async (req, res) => {
+    const verse_id = 24;
+    const username = req.session.username;
+    console.log("Deleting favourite for user: "+ username)
+    try {
+        const pool = await sql.connect(sqlConfig);
         await pool
             .request()
-            .input('user_id', sql.Int, user_id)
+            .input('username', sql.VarChar, username)
             .input('verse_id', sql.Int, verse_id)
-            .query('DELETE FROM FAVORITES WHERE user_id = @user_id AND verse_id = @verse_id');
+            .query('DELETE FROM FAVORITES WHERE user_id = (SELECT id FROM USERS where username = @username) AND verse_id = @verse_id');
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: 'An error occurred' });
@@ -322,4 +336,10 @@ function removeNonAlphabetic(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-
+function getID(){
+    let date = new Date();
+    let day = date.getDay() + 1;
+    let month = date.getMonth() + 1;
+    let id = day.toString() + month.toString();
+    return id;
+}
