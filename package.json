@@ -8,9 +8,10 @@
     "mime-types": "^2.1.35",
     "msnodesqlv8": "^3.1.0",
     "mssql": "^9.1.1",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "xhr2": "^0.2.1"
   },
   "scripts": {
-    "devstart": " nodemon server.js"
+    "start": "node server.js"
   }
 }

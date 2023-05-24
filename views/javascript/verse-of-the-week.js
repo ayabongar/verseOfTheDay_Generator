@@ -5,14 +5,13 @@ let likeButton = document.getElementsByClassName("like")[0];
 let likeClicked = false;
 let shareButton = document.getElementsByClassName("share")[0];
 
-function populateVerses() {
-    //make api call to fetch most voted for the week
-    let title = "John 3:16";
-    let content = "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not " +
-        "perish but have eternal life.";
+async function populateVerses() {
+    let resObj = await fetch("/api/verse-week")
+    let resJson = await resObj.json()
+
     let verse = document.getElementsByClassName("verse")[0];
-    verse.getElementsByTagName("h1")[0].textContent = title;
-    verse.getElementsByTagName("blockquote")[0].textContent = content;
+    verse.getElementsByTagName("h1")[0].textContent = resJson.title;
+    verse.getElementsByTagName("blockquote")[0].textContent = resJson.body;
 }
 
 window.onload = populateVerses;
