@@ -20,7 +20,8 @@
                 <form id="form" action="/auth" method="POST">
                     <input id="username" name="username" type="text" required placeholder="Username">
                     <input id="password" name="password" type="password" required placeholder="Password">
-                    <input type="submit" value="Login">
+                    <input type="submit" value="Login" id="login-button">
+                    <section id="login-loader" class="loader hidden"></section>
                     <p class="register-text">
                         Not a member? <a href="register.html" style="text-decoration:none;">Register here</a>
                     </p>
