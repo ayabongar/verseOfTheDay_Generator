@@ -25,8 +25,9 @@ const BIBLE_API_KEY = process.env.BIBLE_API_KEY;
 
 app.use(session({
     secret: 'secret',
-    resave: true,
-    saveUninitialized: true
+    resave: false, //for every req create new session even if same user
+    saveUninitialized: false, //if not touched session do not save
+    cookie: { path: '/', httpOnly: true, maxAge: 30000}
 }))
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/views')));
