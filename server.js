@@ -6,6 +6,7 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const XMLHttpRequest = require('xhr2');
 const sql = require('mssql');
+const bcrypt = require('bcryptjs');
 require('dotenv').config()
 
 let sqlConfig = {
@@ -233,7 +234,7 @@ async function VerifyLogin(username, password) {
     if (result.length !== 0) {
         let db_password = result[0].password;
         try {
-            if (password == db_password) {
+            if (await bcrypt.compare(password, db_password)) {
                 return true;
             }
         } catch (error) {
@@ -267,7 +268,9 @@ async function RegisterUser(username, password) {
 async function EncryptPassword(password) {
     try {
         //Add new encryption here
-        let hashedPassword = password;
+        let saltbae = await bcrypt.genSalt();
+        let hashbrown = await bcrypt.hash(password,saltbae);
+        let hashedPassword = hashbrown;
         return hashedPassword;
     } catch (error) {
         throw error;
