@@ -12,7 +12,7 @@ CREATE TABLE USERS (
     password VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT GETDATE()
 );
-
+GO
 
 CREATE TABLE VERSES (
     id VARCHAR(5) PRIMARY KEY,
@@ -22,16 +22,17 @@ CREATE TABLE VERSES (
     EndVerse INT NOT NULL,
     created_at DATETIME DEFAULT GETDATE()
 );
+GO
 
 CREATE TABLE FAVORITES (
     id INT PRIMARY KEY IDENTITY(1,1),
     user_id INT NOT NULL,
-    verse_id VARCHAR(5) PRIMARY KEY,
+    verse_id VARCHAR(5),
     created_at DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (user_id) REFERENCES USERS(id),
     FOREIGN KEY (verse_id) REFERENCES VERSES(id)
 );
-
+GO
 -- Insert test data into USERS table
 INSERT INTO USERS (username, password) 
 VALUES 
@@ -40,10 +41,9 @@ VALUES
     ('user3', 'password3'),
     ('user4', 'password4'),
     ('user5', 'password5');
-
+GO
 -- Insert test data into VERSES table
 INSERT INTO VERSES (id, Book, chapter, startVerse, EndVerse)
-VALUES  INSERT INTO VERSES (Book, chapter, startVerse, EndVerse)
 VALUES ('0101', 'GEN', 1, 1, 5),
 	('0102', 'PSA', 23, 1, 6),
 	('0103', 'MAT', 5, 3, 12),
@@ -256,7 +256,7 @@ VALUES ('0101', 'GEN', 1, 1, 5),
 	('0728', 'LUK', 10, 27, 28),
 	('0729', 'JHN', 8, 31, 32),
 	('0730', 'ACT', 4, 12, 12),
-	('0731', 'ROM', 1, 16, 17)
+	('0731', 'ROM', 1, 16, 17),
     ('0801', '1COR', 1, 18, 19),
 	('0802', '2COR', 5, 17, 17),
 	('0803', 'GAL', 2, 20, 21),
@@ -414,12 +414,12 @@ VALUES ('0101', 'GEN', 1, 1, 5),
 -- Insert test data into FAVORITES table
 INSERT INTO FAVORITES (user_id, verse_id) 
 VALUES
-    (1, "0101"),
-    (1, "0102"),
-    (2, "0103"),
-    (2, "0104"),
-    (3, "0105"),
-    (4, "0106"),
-    (5, "0107"),
-    (5, "0109"),
-    (5, "0110");
+    (1, '0101'),
+    (1, '0102'),
+    (2, '0103'),
+    (2, '0104'),
+    (3, '0105'),
+    (4, '0106'),
+    (5, '0107'),
+    (5, '0109'),
+    (5, '0110');
