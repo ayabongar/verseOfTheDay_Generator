@@ -410,7 +410,7 @@ VALUES ('0101', 'GEN', 1, 1, 5),
 	('1229', 'ACTS', 1, 8, 8),
 	('1230', 'ROM', 8, 28, 28),
 	('1231', '1COR', 16, 14, 14);
---
+
 -- Insert test data into FAVORITES table
 INSERT INTO FAVORITES (user_id, verse_id) 
 VALUES
@@ -423,3 +423,4 @@ VALUES
     (5, '0107'),
     (5, '0109'),
     (5, '0110');
+GO
