@@ -84,7 +84,7 @@ app.post('/auth', (req, res) => {
                 if (result) {
                     console.log('user login succcess');
                     req.session.loggedin = true;
-                    req.session.username = result.username;
+                    req.session.username = username;
                     res.redirect('/verseoftheday')
                 } else {
                     res.json({ success: 'fail' });
