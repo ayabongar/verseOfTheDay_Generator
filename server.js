@@ -94,6 +94,11 @@ app.post('/auth', (req, res) => {
     }
 })
 
+app.get('/logout',(req,res)=>{
+    req.session.destroy();
+    res.redirect('/');
+})
+
 app.get("/api/verse-day", (req, res) => {
     let username = req.session.username;
 
