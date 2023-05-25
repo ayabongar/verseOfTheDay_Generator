@@ -40,8 +40,6 @@ likeButton.addEventListener("click", async () => {
         })
         if (handle.ok){
             //all good
-        }else{
-            alert("There is an issue with the database, please try again");
         }
     } else {
         likeButton.classList.remove("click");
@@ -51,8 +49,6 @@ likeButton.addEventListener("click", async () => {
         })
         if (handle.ok){
             //all good
-        }else{
-            alert("There is an issue with the database, please try again");
         }
     }
 })
