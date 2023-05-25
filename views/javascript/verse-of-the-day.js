@@ -21,8 +21,15 @@ async function populateVerse() {
     loader.classList.add("hidden");
     
     //handle if liked
-    likeClicked = resJson.liked;
-    likeButton.classList.add("click");
+    //api request to see if record exists for current user
+    const liked = await fetch("favorite", {
+        method:"GET"
+    });
+    let rows = await liked.json()
+    if(rows[0]>=1){
+        likeButton.classList.add("click");
+        likeClicked = true;
+    }
 }
 
 window.onload = populateVerse;
@@ -31,17 +38,25 @@ likeButton.addEventListener("click", async () => {
     if (!likeClicked) {
         likeButton.classList.add("click");
         likeClicked = !likeClicked;
+        const handle = await fetch(`/favorites`,{
+            method:"POST"
+        })
+        if (handle.ok){
+            //all good
+        }else{
+            alert("There is an issue with the database, please try again");
+        }
     } else {
         likeButton.classList.remove("click");
         likeClicked = !likeClicked;
-    }
-    const handle = await fetch(`/api/liked/${likeClicked}`,{
-        method:"PATCH"
-    })
-    if (handle.ok){
-        //all good
-    }else{
-        alert("There is an issue with the database, please try again");
+        const handle = await fetch(`/favorites`,{
+            method:"DELETE"
+        })
+        if (handle.ok){
+            //all good
+        }else{
+            alert("There is an issue with the database, please try again");
+        }
     }
 })
 

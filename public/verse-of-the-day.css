@@ -13,3 +13,38 @@
 
     animation: pop .3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
+
+.user-section{
+    top: 0;
+    left: 0;
+    display: flex;
+    position: fixed;
+}
+
+.logout-btn{
+
+    background-color: var(--button-color-op); /* Green */
+    top: 0;
+    left: 0;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    margin-left: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    position: fixed;
+    font-size: 16px;
+
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+
+    border-radius: 10px;
+    transition: background-color .1s ease;
+}
+
+.logout-btn:hover{
+    cursor: pointer;
+    background-color: var(--button-hover-color);
+}
