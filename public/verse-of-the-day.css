@@ -48,3 +48,21 @@
     cursor: pointer;
     background-color: var(--button-hover-color);
 }
+#circle-loader{
+    width: 6em;
+    height: 6em;
+    border-radius: 50%;
+    border: 0.75em solid var(--background_colour_week_op);
+    border-top-color: var(--loader-bg-color);
+    animation: 2s infinite example-one;
+    margin: auto;
+    margin-top: 4rem;
+}
+
+@keyframes example-one{
+    from {transform: rotate(0deg)}
+    to {transform: rotate(360deg)}
+}
+.hidden {
+    display: none;
+}

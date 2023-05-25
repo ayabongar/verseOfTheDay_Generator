@@ -76,3 +76,6 @@ input[value=Register]:hover{
     from {transform: rotate(0deg)}
     to {transform: rotate(360deg)}
 }
+.hidden {
+    display: none;
+}
