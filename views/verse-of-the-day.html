@@ -16,12 +16,13 @@
         <form class="logout-form" action="/logout" method="get">
             <button type="submit"class="logout-btn">Log Out</button>
         </form>
-        <nav><menu><ol><li><a href="/verse-of-the-week.html">Verse of the week</a></li></ol></menu></nav>
+        <nav><menu><ol><li><a href="/verseoftheweek">Verse of the week</a></li></ol></menu></nav>
         <article class="verse shadow">
+            <section id="circle-loader" class="loader"></section>
             <h1></h1>
             <blockquote></blockquote>
-            <button class="like"><i class="material-symbols-rounded shadow">favorite</i></button>
-            <button class="share"><i class="material-symbols-rounded shadow">send</i></button>
+            <button class="like hidden"><i class="material-symbols-rounded shadow">favorite</i></button>
+            <button class="share hidden"><i class="material-symbols-rounded shadow">send</i></button>
         </article>
     </main>
     <script src="javascript/verse-of-the-day.js"></script>

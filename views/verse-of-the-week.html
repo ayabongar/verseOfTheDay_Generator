@@ -9,14 +9,19 @@
     <link rel="stylesheet" href="global.css">
     <link rel="stylesheet" href="globalVerse.css">
     <link rel="stylesheet" href="verse-of-the-week.css">
+    <link rel="stylesheet" href="verse-of-the-day.html">
 </head>
 <body>
     <main>
-        <nav><menu><ol><li><a href="/verse-of-the-day.html">Verse of the day</a></li></ol></menu></nav>
+        <form class="logout-form" action="/logout" method="get">
+            <button type="submit"class="logout-btn">Log Out</button>
+        </form>
+        <nav><menu><ol><li><a href="/verseoftheday">Verse of the day</a></li></ol></menu></nav>
         <article class="verse shadow">
+            <section id="circle-loader" class="loader"></section>
             <h1></h1>
             <blockquote></blockquote>
-            <button class="share"><i class="material-symbols-rounded shadow">send</i></button>
+            <button class="share hidden"><i class="material-symbols-rounded shadow">send</i></button>
         </article>
     </main>
     <script src="javascript/verse-of-the-week.js"></script>

@@ -45,6 +45,7 @@ app.get('/register', (req, res) => {
 })
 
 app.get('/verseoftheday', (req, res) => {
+    console.log(req.session)
     if (req.session.loggedin) {
         res.sendFile(path.join(__dirname, '/views/verse-of-the-day.html'));
     } else {
@@ -60,15 +61,19 @@ app.get('/verseoftheweek', (req, res) => {
     }
 })
 
-app.post('/registerUser', (req, res) => {
+app.post('/registerUser', async (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
-    if (username && password) {
+    if(await userExist(username) !== 0){
+        console.log("Existing username")
+        res.status(403).json({"message":"Username in use"});
+        return;
+    }else if(username && password) {
         try {
             RegisterUser(username, password)
-                .then(result => {
+                .then(() => {
                     console.log('user registered successfully');
-                    res.redirect('/');
+                    res.status(200).send();
                 })
         } catch (error) {
             res.status(500).send();
@@ -87,9 +92,9 @@ app.post('/auth', (req, res) => {
                     console.log('user login succcess');
                     req.session.loggedin = true;
                     req.session.username = username;
-                    res.redirect('/verseoftheday')
+                    res.status(200).send()
                 } else {
-                    res.json({ success: 'fail' });
+                    res.status(403).send();
                 }
             });
     }
@@ -122,22 +127,37 @@ app.get("/api/verse-day", (req, res) => {
 })
 
 app.get("/api/verse-week", async (req, res) => {
-    getVerseOfTheWeek().then((data) => {
-        const verseID = data[0].verse_id;
-        getVerseKey(verseID).then((verseKeyData) => {
-            getVerse(verseKeyData[0], BIBLE_API_KEY).then((data) => {
-                verseTitle = removeNonAlphabetic(data.reference);
-                verseContent = removeNonAlphabetic(data.content);
+    const datesArray = await getWeekBefore();
+    const favourites = await getVerseOfTheWeek();
 
-                let verse = {
-                    title: verseTitle,
-                    body: verseContent,
-                    liked: true,
-                };
-                res.send(verse)
-            });
+    let maxLiked = getID();
+    let maxFrequency = -99;
+
+    favourites.forEach(verse => {
+        if(datesArray.includes(verse.verse_id))
+        {
+            if(verse.frequency >= maxFrequency)
+            {
+                maxLiked = verse.verse_id;
+            }
+        }
+    });
+
+    let verseTitle;
+    let verseContent;
+
+    getVerseKey(maxLiked).then((verseKeyData) => {
+        getVerse(verseKeyData[0], BIBLE_API_KEY).then((data) => {
+            verseTitle = removeNonAlphabetic(data.reference);
+            verseContent = removeNonAlphabetic(data.content);
+
+            let verse = {
+                title: verseTitle,
+                body: verseContent,
+                liked: true,
+            };
+            res.send(verse)
         });
-
     });
 })
 
@@ -203,6 +223,22 @@ app.delete('/favorites', async (req, res) => {
     }
 });
 
+async function userExist(username){
+    try {
+        const pool = await sql.connect(sqlConfig);
+        const result = await pool
+            .request()
+            .input('username', sql.VarChar, username)
+            .query('SELECT * FROM USERS WHERE username = @username');
+        return result.rowsAffected[0];
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred' });
+        return null;
+    }
+}
+app.use((req, res)=>{
+    res.sendFile(path.join(__dirname, "/views/error.html"))
+})
 app.listen(port, err => {
     if (err) {
         return console.log(err);
@@ -275,10 +311,6 @@ async function EncryptPassword(password) {
 
 function getVerse(verseKey, BIBLE_API_KEY) {
     let verse = verseKey.Book + "." + verseKey.chapter + "." + verseKey.startVerse;
-    //not liking this in the req, doesnt seem to work with EndVerse
-    // if(verseKey.EndVerse !== undefined || verseKey.EndVerse !== null){
-    //     verse += "-"+verseKey.EndVerse
-    // }
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.addEventListener(`readystatechange`, function () {
@@ -312,27 +344,14 @@ async function getVerseKey(verseID) {
     });
 };
 
-//not used, didnt know if i could remove or not
-async function getVerses() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let connection = await sql.connect(sqlConfig);
-            let resultSet = await connection.request().query(`SELECT * FROM FAVOURITE`);
-
-            resolve(resultSet.recordset);
-            connection.close();
-        }
-        catch (err) {
-            console.error(err.message);
-        }
-    });
-};
-
 async function getVerseOfTheWeek() {
     return new Promise(async (resolve, reject) => {
         try {
             let connection = await sql.connect(sqlConfig);
-            let resultSet = await connection.request().query(`SELECT TOP 1 verse_id FROM FAVORITES GROUP BY verse_id ORDER BY COUNT(verse_id) DESC`);
+            let resultSet = await connection.request().query(`SELECT verse_id, COUNT(*) AS frequency
+            FROM FAVORITES
+            GROUP BY verse_id
+            ORDER BY frequency DESC;`);
 
             resolve(resultSet.recordset);
             connection.close();
@@ -355,3 +374,24 @@ function getID() {
     let id = month + day
     return id;
 }
+
+async function getWeekBefore() {
+    let currentDate = new Date();
+    let datesArray = [];
+
+    datesArray.push(formatDate(currentDate));
+
+    for (let i = 1; i <= 6; i++) {
+        currentDate.setDate(currentDate.getDate() - 1);
+        datesArray.push(formatDate(currentDate));
+    }
+
+    return datesArray;
+}
+
+function formatDate(date) {
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+    return month + '' + day;
+}
+

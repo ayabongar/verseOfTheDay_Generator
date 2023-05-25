@@ -1,8 +1,25 @@
+:root{
+    --text_color: rgb(70, 62, 67);
+    --button-color: #3F51B5;
+    --button-color-op: #3f51b5a4;
+    --button-hover-color:#1e2759;
+    --submit-text-color: #FFFF;
+    --background_colour: rgb(242, 237, 231);
+    --background_colour_op: rgba(242, 237, 231, .5);
+    --background_colour_week_op:rgba(139, 141, 131, .5);
+    --backgroung_color_inv: rgba(242, 237, 231, 0);
+    --share_colour: rgb(139,145,131);
+    --share_outline: rgb(94, 98, 89);
+    --text_color: rgb(70,62,67);
+    --main-bg-color: #1A535C;
+    --loader-bg-color: #FF6B6B;
+    --loader-acc-color: #4ECDC4;
+}
+
 *{
     padding: 0%;
     margin: 0;
 }
-
 .like .material-symbols-rounded:hover{
     -webkit-text-stroke: 3px maroon;
 }
@@ -22,24 +39,47 @@
     position: fixed;
 }
 
-.logout-btn{
+#circle-loader{
+    width: 6em;
+    height: 6em;
+    border-radius: 50%;
+    border: 0.75em solid var(--background_colour_week_op);
+    border-top-color: var(--loader-bg-color);
+    animation: 2s infinite example-one;
+    margin: 4rem auto 0 10rem;
+}
 
+@keyframes example-one{
+    from {transform: rotate(0deg)}
+    to {transform: rotate(360deg)}
+}
+.hidden {
+    display: none;
+}
+.logout-btn{
+    width: 10vw;
+    min-width: fit-content;
     background-color: var(--button-color-op); /* Green */
-    top: 0;
-    left: 0;
+    bottom: 0;
+    right: 0;
+
     border: none;
     color: white;
+    
     padding: 15px 32px;
-    margin-left: 1.5rem;
-    margin-top: 1.5rem;
+    margin-right: 1.5rem;
+    margin-bottom: 1.5rem;
     text-align: center;
     text-decoration: none;
-    display: flex;
+    
+    display: absolute;
     position: fixed;
     font-size: 16px;
 
     font-family: 'Raleway', sans-serif;
     font-weight: 600;
+    align-items: center;
+    justify-content: center;
 
     border-radius: 10px;
     transition: background-color .1s ease;
@@ -48,4 +88,9 @@
 .logout-btn:hover{
     cursor: pointer;
     background-color: var(--button-hover-color);
+}
+@media (max-aspect-ratio:1/1) or (max-width: 815px) {
+    #register-loader{
+        margin: 4rem auto 0 auto;
+    }
 }
