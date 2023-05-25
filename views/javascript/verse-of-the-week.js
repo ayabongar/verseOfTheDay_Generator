@@ -4,6 +4,7 @@ let main = document.getElementsByTagName("main")[0];
 let likeButton = document.getElementsByClassName("like")[0];
 let likeClicked = false;
 let shareButton = document.getElementsByClassName("share")[0];
+let loader = document.getElementsByClassName("loader")[0];
 
 async function populateVerses() {
     let resObj = await fetch("/api/verse-week")

@@ -122,22 +122,37 @@ app.get("/api/verse-day", (req, res) => {
 })
 
 app.get("/api/verse-week", async (req, res) => {
-    getVerseOfTheWeek().then((data) => {
-        const verseID = data[0].verse_id;
-        getVerseKey(verseID).then((verseKeyData) => {
-            getVerse(verseKeyData[0], BIBLE_API_KEY).then((data) => {
-                verseTitle = removeNonAlphabetic(data.reference);
-                verseContent = removeNonAlphabetic(data.content);
+    const datesArray = await getWeekBefore();
+    const favourites = await getVerseOfTheWeek();
 
-                let verse = {
-                    title: verseTitle,
-                    body: verseContent,
-                    liked: true,
-                };
-                res.send(verse)
-            });
+    let maxLiked = getID();
+    let maxFrequency = -99;
+
+    favourites.forEach(verse => {
+        if(datesArray.includes(verse.verse_id))
+        {
+            if(verse.frequency >= maxFrequency)
+            {
+                maxLiked = verse.verse_id;
+            }
+        }
+    });
+
+    let verseTitle;
+    let verseContent;
+
+    getVerseKey(maxLiked).then((verseKeyData) => {
+        getVerse(verseKeyData[0], BIBLE_API_KEY).then((data) => {
+            verseTitle = removeNonAlphabetic(data.reference);
+            verseContent = removeNonAlphabetic(data.content);
+
+            let verse = {
+                title: verseTitle,
+                body: verseContent,
+                liked: true,
+            };
+            res.send(verse)
         });
-
     });
 })
 
@@ -275,10 +290,6 @@ async function EncryptPassword(password) {
 
 function getVerse(verseKey, BIBLE_API_KEY) {
     let verse = verseKey.Book + "." + verseKey.chapter + "." + verseKey.startVerse;
-    //not liking this in the req, doesnt seem to work with EndVerse
-    // if(verseKey.EndVerse !== undefined || verseKey.EndVerse !== null){
-    //     verse += "-"+verseKey.EndVerse
-    // }
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.addEventListener(`readystatechange`, function () {
@@ -312,27 +323,14 @@ async function getVerseKey(verseID) {
     });
 };
 
-//not used, didnt know if i could remove or not
-async function getVerses() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let connection = await sql.connect(sqlConfig);
-            let resultSet = await connection.request().query(`SELECT * FROM FAVOURITE`);
-
-            resolve(resultSet.recordset);
-            connection.close();
-        }
-        catch (err) {
-            console.error(err.message);
-        }
-    });
-};
-
 async function getVerseOfTheWeek() {
     return new Promise(async (resolve, reject) => {
         try {
             let connection = await sql.connect(sqlConfig);
-            let resultSet = await connection.request().query(`SELECT TOP 1 verse_id FROM FAVORITES GROUP BY verse_id ORDER BY COUNT(verse_id) DESC`);
+            let resultSet = await connection.request().query(`SELECT verse_id, COUNT(*) AS frequency
+            FROM FAVORITES
+            GROUP BY verse_id
+            ORDER BY frequency DESC;`);
 
             resolve(resultSet.recordset);
             connection.close();
@@ -355,3 +353,24 @@ function getID() {
     let id = month + day
     return id;
 }
+
+async function getWeekBefore() {
+    let currentDate = new Date();
+    let datesArray = [];
+
+    datesArray.push(formatDate(currentDate));
+
+    for (let i = 1; i <= 6; i++) {
+        currentDate.setDate(currentDate.getDate() - 1);
+        datesArray.push(formatDate(currentDate));
+    }
+
+    return datesArray;
+}
+
+function formatDate(date) {
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+    return month + '' + day;
+}
+

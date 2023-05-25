@@ -7,9 +7,6 @@ let shareButton = document.getElementsByClassName("share")[0];
 let loader = document.getElementsByClassName("loader")[0];
 
 async function populateVerse() {
-    //make api call
-    let title = "";
-    let content = "";
     let resObj = await fetch("/api/verse-day")
     let resJson = await resObj.json()
     
