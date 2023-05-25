@@ -45,6 +45,7 @@ app.get('/register', (req, res) => {
 })
 
 app.get('/verseoftheday', (req, res) => {
+    console.log(req.session)
     if (req.session.loggedin) {
         res.sendFile(path.join(__dirname, '/views/verse-of-the-day.html'));
     } else {
@@ -60,15 +61,19 @@ app.get('/verseoftheweek', (req, res) => {
     }
 })
 
-app.post('/registerUser', (req, res) => {
+app.post('/registerUser', async (req, res) => {
     let username = req.body.username;
     let password = req.body.password;
-    if (username && password) {
+    if(await userExist(username) !== 0){
+        console.log("Existing username")
+        res.status(403).json({"message":"Username in use"});
+        return;
+    }else if(username && password) {
         try {
             RegisterUser(username, password)
-                .then(result => {
+                .then(() => {
                     console.log('user registered successfully');
-                    res.redirect('/');
+                    res.status(200).send();
                 })
         } catch (error) {
             res.status(500).send();
@@ -87,9 +92,9 @@ app.post('/auth', (req, res) => {
                     console.log('user login succcess');
                     req.session.loggedin = true;
                     req.session.username = username;
-                    res.redirect('/verseoftheday')
+                    res.status(200).send()
                 } else {
-                    res.json({ success: 'fail' });
+                    res.status(403).send();
                 }
             });
     }
@@ -218,6 +223,22 @@ app.delete('/favorites', async (req, res) => {
     }
 });
 
+async function userExist(username){
+    try {
+        const pool = await sql.connect(sqlConfig);
+        const result = await pool
+            .request()
+            .input('username', sql.VarChar, username)
+            .query('SELECT * FROM USERS WHERE username = @username');
+        return result.rowsAffected[0];
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred' });
+        return null;
+    }
+}
+app.use((req, res)=>{
+    res.sendFile(path.join(__dirname, "/views/error.html"))
+})
 app.listen(port, err => {
     if (err) {
         return console.log(err);

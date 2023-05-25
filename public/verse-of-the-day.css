@@ -56,3 +56,8 @@
 .hidden {
     display: none;
 }
+@media (max-aspect-ratio:1/1) or (max-width: 815px) {
+    #register-loader{
+        margin: 4rem auto 0 auto;
+    }
+}

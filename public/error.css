@@ -1,0 +1,31 @@
+:root{
+    --background_colour: rgb(242, 237, 231);
+}
+
+*{
+    padding: 0%;
+    margin: 0;
+}
+
+body{
+    background-color: var(--background_colour);
+    width: 100vw;
+    height: 100vh;
+}
+
+main{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-image: url("./Images/BottomLeft.png");
+    background-position:left bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
+    
+    color: var(--text_color);
+    font-family: 'Raleway', sans-serif;
+}

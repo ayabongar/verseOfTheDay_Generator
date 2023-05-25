@@ -109,3 +109,6 @@ input[value=Login]:hover{
 .hidden {
     display: none;
 }
+.error{
+    outline:red 1px solid
+}

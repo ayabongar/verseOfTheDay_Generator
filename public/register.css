@@ -98,3 +98,6 @@ input[value=Register]:hover{
 .hidden {
     display: none;
 }
+.error{
+    outline:red 1px solid
+}
