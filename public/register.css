@@ -46,6 +46,7 @@
 .register-header {
     margin: 1rem 0rem 1rem 0rem;
     color: var(--text_color);
+    font-size: 2rem;
 }
 
 .login-text {

@@ -45,8 +45,7 @@ nav:hover{
     border: 0.75em solid var(--background_colour_week_op);
     border-top-color: var(--loader-bg-color);
     animation: 2s infinite example-one;
-    margin: auto;
-    margin-top: 4rem;
+    margin: 4rem auto 0 10rem;
 }
 
 @keyframes example-one{
