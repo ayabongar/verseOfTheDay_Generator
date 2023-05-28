@@ -6,8 +6,6 @@ const password = document.getElementById('password');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     //Creates Key-Value
-
-    console.log("HERE");
     
     let payload = new FormData(form);
     let value = Object.fromEntries(payload);

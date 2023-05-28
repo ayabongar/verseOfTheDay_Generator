@@ -4,21 +4,29 @@ let main = document.getElementsByTagName("main")[0];
 let likeButton = document.getElementsByClassName("like")[0];
 let likeClicked = false;
 let shareButton = document.getElementsByClassName("share")[0];
+let loader = document.getElementsByClassName("loader")[0];
 
 async function populateVerse() {
-    //make api call
-    let title = "";
-    let content = "";
     let resObj = await fetch("/api/verse-day")
     let resJson = await resObj.json()
     
     let verse = document.getElementsByClassName("verse")[0];
     verse.getElementsByTagName("h1")[0].textContent = resJson.title;
     verse.getElementsByTagName("blockquote")[0].textContent = resJson.body;
+    likeButton.classList.remove("hidden");
+    shareButton.classList.remove("hidden");
+    loader.classList.add("hidden");
     
     //handle if liked
-    likeClicked = resJson.liked;
-    likeButton.classList.add("click");
+    //api request to see if record exists for current user
+    const liked = await fetch("favorite", {
+        method:"GET"
+    });
+    let rows = await liked.json()
+    if(rows[0]>=1){
+        likeButton.classList.add("click");
+        likeClicked = true;
+    }
 }
 
 window.onload = populateVerse;
@@ -27,17 +35,21 @@ likeButton.addEventListener("click", async () => {
     if (!likeClicked) {
         likeButton.classList.add("click");
         likeClicked = !likeClicked;
+        const handle = await fetch(`/favorites`,{
+            method:"POST"
+        })
+        if (handle.ok){
+            //all good
+        }
     } else {
         likeButton.classList.remove("click");
         likeClicked = !likeClicked;
-    }
-    const handle = await fetch(`/api/liked/${likeClicked}`,{
-        method:"PATCH"
-    })
-    if (handle.ok){
-        //all good
-    }else{
-        alert("There is an issue with the database, please try again");
+        const handle = await fetch(`/favorites`,{
+            method:"DELETE"
+        })
+        if (handle.ok){
+            //all good
+        }
     }
 })
 

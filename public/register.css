@@ -1,3 +1,21 @@
+:root{
+    --text_color: rgb(70, 62, 67);
+    --button-color: #3F51B5;
+    --button-color-op: #3f51b5a4;
+    --button-hover-color:#1e2759;
+    --submit-text-color: #FFFF;
+    --background_colour: rgb(242, 237, 231);
+    --background_colour_op: rgba(242, 237, 231, .5);
+    --background_colour_week_op:rgba(139, 141, 131, .5);
+    --backgroung_color_inv: rgba(242, 237, 231, 0);
+    --share_colour: rgb(139,145,131);
+    --share_outline: rgb(94, 98, 89);
+    --text_color: rgb(70,62,67);
+    --main-bg-color: #1A535C;
+    --loader-bg-color: #FF6B6B;
+    --loader-acc-color: #4ECDC4;
+}
+
 * {
     padding: 0%;
     margin: 0;
@@ -28,6 +46,7 @@
 .register-header {
     margin: 1rem 0rem 1rem 0rem;
     color: var(--text_color);
+    font-size: 2rem;
 }
 
 .login-text {
@@ -61,4 +80,24 @@ input[value=Register]:hover{
     cursor: pointer;
     letter-spacing: 2px;
     background-color: var(--button-hover-color);
+}
+#register-loader{
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    border: 0.75em solid var(--background_colour_week_op);
+    border-top-color: var(--loader-bg-color);
+    animation: 2s infinite example-one;
+    margin: auto;
+}
+
+@keyframes example-one{
+    from {transform: rotate(0deg)}
+    to {transform: rotate(360deg)}
+}
+.hidden {
+    display: none;
+}
+.error{
+    outline:red 1px solid
 }
